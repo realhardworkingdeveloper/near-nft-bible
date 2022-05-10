@@ -11,6 +11,8 @@ pub trait NonFungibleTokenCore {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
+        //we introduce an approval ID so that people with that approval ID can transfer the token
+        approval_id: Option<u64>,
         memo: Option<String>,
     );
 
@@ -20,10 +22,11 @@ pub trait NonFungibleTokenCore {
         &mut self,
         receiver_id: AccountId,
         token_id: TokenId,
+        //we introduce an approval ID so that people with that approval ID can transfer the token
+        approval_id: Option<u64>,
         memo: Option<String>,
         msg: String,
     ) -> PromiseOrValue<bool>;
-
     //get information about the NFT token passed in
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
 }
@@ -53,20 +56,8 @@ trait NonFungibleTokenResolver {
         owner_id: AccountId,
         receiver_id: AccountId,
         token_id: TokenId,
-    ) -> bool;
-}
-
-/*
-    resolves the promise of the cross contract call to the receiver contract
-    this is stored on THIS contract and is meant to analyze what happened in the cross contract call when nft_on_transfer was called
-    as part of the nft_transfer_call method
-*/ 
-trait NonFungibleTokenResolver {
-    fn nft_resolve_transfer(
-        &mut self,
-        owner_id: AccountId,
-        receiver_id: AccountId,
-        token_id: TokenId,
+        //we introduce the approval map so we can keep track of what the approvals were before the transfer
+        approved_account_ids: HashMap<AccountId, u64>,
     ) -> bool;
 }
 
