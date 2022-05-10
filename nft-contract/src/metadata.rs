@@ -76,6 +76,6 @@ impl NonFungibleTokenMetadata for Contract {
         /*
             FILL THIS IN
         */
-        todo!(); //remove once code is filled in.
+        self.metadata.get().unwrap()
     }
 }
